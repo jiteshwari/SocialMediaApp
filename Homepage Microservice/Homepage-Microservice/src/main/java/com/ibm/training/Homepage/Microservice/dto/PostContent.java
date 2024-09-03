@@ -1,27 +1,23 @@
-package com.ibm.training.Content.Microservice.Entity;
+package com.ibm.training.Homepage.Microservice.dto;
+
 
 import jakarta.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "Post")
-public class PostContent implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PostContent {
+
+  
     private Long postId;
 
-    @Column(nullable = false)
+  
     private Long userId;
 
-    @Column(length = 50)  // Increased length for contentType
     private String contentType;
 
-    @Lob
-    @Column(name = "contentData")  // Removed columnDefinition
+  
     private byte[] contentData;
 
-    @Column(columnDefinition = "TEXT")
     private String caption;
 
     // Default Constructor

@@ -5,8 +5,13 @@ import org.springframework.stereotype.Repository;
 
 import com.ibm.training.Content.Microservice.Entity.PostContent;
 
+import java.util.List;
+
 @Repository
 public interface  PostContentRepository extends JpaRepository<PostContent, Long>{
+
+
+    List<PostContent> findByUserId(Long userId);
 }
 
 
