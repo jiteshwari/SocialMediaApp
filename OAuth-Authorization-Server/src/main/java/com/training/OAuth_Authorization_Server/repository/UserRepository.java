@@ -1,9 +1,7 @@
-package com.ibm.training.UserAuthAndProfile.Repository;
+package com.training.OAuth_Authorization_Server.repository;
 
-import com.ibm.training.UserAuthAndProfile.Entity.User;
+import com.training.OAuth_Authorization_Server.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-
 import org.springframework.stereotype.Repository;
 
 @Repository
