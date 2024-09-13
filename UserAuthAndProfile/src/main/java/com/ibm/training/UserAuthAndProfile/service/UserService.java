@@ -33,6 +33,24 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
+    public User editUserProfile(Long userId, User updatedUser) {
+        Optional<User> existingUser = userRepository.findById(userId);
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            user.setFirstName(updatedUser.getFirstName());
+            user.setLastName(updatedUser.getLastName());
+            user.setEmail(updatedUser.getEmail());
+            user.setBio(updatedUser.getBio());
+            user.setProfilepicture(updatedUser.getProfilepicture());
+            // If you want to update password, you can check and encode it
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
+            return userRepository.save(user);
+        }
+        throw new UsernameNotFoundException("User not found with id: " + userId);
+    }
+
     public User updateUser(User user) {
         return userRepository.save(user);
     }

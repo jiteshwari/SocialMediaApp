@@ -1,19 +1,30 @@
 package com.ibm.training.Content.Microservice.config;
 
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
+
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class OpenApiConfig {
 
+
     @Bean
-    public OpenAPI customOpenAPI() {
+    OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info()
-                        .title("Content Microservice API")
-                        .version("1.0")
-                        .description("API documentation for the Content Microservice"));
+                .components(new Components().addSecuritySchemes("bearer-token",
+                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
+                                .name("Authorization")))
+                .info(new Info().title("CONTENT-MICROSERVICE")
+                        .description("@author:github/JITESHWARI auth for SOCAIL MEDIA app").version("1.0.0"))
+                .addSecurityItem(new SecurityRequirement().addList("bearer-token"));
     }
+
 }

@@ -1,12 +1,10 @@
 package com.ibm.training.UserAuthAndProfile.util;
 
-
-
-
-
+import com.ibm.training.UserAuthAndProfile.service.TokenBlacklistService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +17,9 @@ import java.util.function.Function;
 public class JwtTokenUtil {
 
     private final String secret = "your_secret_key"; // Use a strong secret key
+
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -57,6 +58,9 @@ public class JwtTokenUtil {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
+        if (tokenBlacklistService.isTokenBlacklisted(token)) {
+            return false;
+        }
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
