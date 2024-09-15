@@ -17,9 +17,9 @@ public class PostContent implements Serializable {
     @Column(length = 50)  // Increased length for contentType
     private String contentType;
 
-    @Lob
-    @Column(name = "contentData")  // Removed columnDefinition
-    private byte[] contentData;
+
+    @Column(name = "url")  // Removed columnDefinition
+    private String posturl;
 
     @Column(columnDefinition = "TEXT")
     private String caption;
@@ -28,10 +28,13 @@ public class PostContent implements Serializable {
     public PostContent() {}
 
     // Parameterized Constructor
-    public PostContent(Long userId, String contentType, byte[] contentData, String caption) {
+
+
+    public PostContent(Long postId, Long userId, String contentType, String posturl, String caption) {
+        this.postId = postId;
         this.userId = userId;
         this.contentType = contentType;
-        this.contentData = contentData;
+        this.posturl = posturl;
         this.caption = caption;
     }
 
@@ -60,12 +63,12 @@ public class PostContent implements Serializable {
         this.contentType = contentType;
     }
 
-    public byte[] getContentData() {
-        return contentData;
+    public String getPosturl() {
+        return posturl;
     }
 
-    public void setContentData(byte[] contentData) {
-        this.contentData = contentData;
+    public void setPosturl(String posturl) {
+        this.posturl = posturl;
     }
 
     public String getCaption() {

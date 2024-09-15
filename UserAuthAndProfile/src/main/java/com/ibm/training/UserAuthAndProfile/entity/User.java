@@ -28,6 +28,6 @@ public class User {
 
     private String bio;
 
-    private String profilepicture;
+    private String profilepic;
 }
 

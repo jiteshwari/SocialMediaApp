@@ -46,32 +46,36 @@ public class JwtAuthenticationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        // Cast the general ServletRequest and ServletResponse to Http-specific ones
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        String path = httpRequest.getRequestURI();
+
+        // Bypass the JWT filter for Swagger UI and API docs
+        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         // Extract the Authorization header
         String authorizationHeader = httpRequest.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            // If no token or invalid format, return 401 Unauthorized
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpResponse.getWriter().write("Missing or invalid Authorization header");
             return;
         }
 
-        // Extract the token from the Authorization header
-        String token = authorizationHeader.substring(7); // Remove "Bearer " prefix
+        // Extract the token
+        String token = authorizationHeader.substring(7);
 
         // Validate the token with the UserAuth microservice
         if (!validateTokenWithAuthService(token)) {
-            // If the token is invalid, return 401 Unauthorized
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpResponse.getWriter().write("Invalid or expired token");
             return;
         }
 
-        // If token is valid, continue the request
         chain.doFilter(request, response);
     }
 

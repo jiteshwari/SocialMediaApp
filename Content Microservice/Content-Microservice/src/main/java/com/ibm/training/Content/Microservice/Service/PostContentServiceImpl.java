@@ -24,12 +24,12 @@ public class PostContentServiceImpl implements PostContentService {
     private PostContentRepository postContentRepository;
 
     @Override
-    public PostContent uploadImagePost(String contentType, MultipartFile imageFile, String caption) {
-        byte[] imageData = getImageData(imageFile);
+    public PostContent uploadImagePost(String contentType, String url, String caption) {
+
         PostContent postContent = new PostContent();
         postContent.setContentType(contentType);
         postContent.setCaption(caption);
-        postContent.setContentData(imageData);
+        postContent.setPosturl(url);
         postContent.setUserId(1L);
 
         return savePostContent(postContent);
@@ -45,12 +45,12 @@ public class PostContentServiceImpl implements PostContentService {
     }
 
     @Override
-    public PostContent uploadImageTextPost(String contentType, String contentText, MultipartFile imageFile) {
-        byte[] imageData = getImageData(imageFile);
+    public PostContent uploadImageTextPost(String contentType, String contentText, String url) {
+
         PostContent postContent = new PostContent();
         postContent.setContentType(contentType);
         postContent.setCaption(contentText);
-        postContent.setContentData(imageData);
+        postContent.setPosturl(url);
         postContent.setUserId(1L);
         return savePostContent(postContent);
     }

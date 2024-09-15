@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.ibm.training.UserAuthAndProfile.exception.UserNotFoundException;
+
+
 @Service
 public class UserService implements UserDetailsService {
 
@@ -25,6 +28,10 @@ public class UserService implements UserDetailsService {
     }
 
     public User register(User user) {
+        // Ensure no existing user with the same email
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already in use");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -34,28 +41,23 @@ public class UserService implements UserDetailsService {
     }
 
     public User editUserProfile(Long userId, User updatedUser) {
-        Optional<User> existingUser = userRepository.findById(userId);
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
+        return userRepository.findById(userId).map(user -> {
             user.setFirstName(updatedUser.getFirstName());
             user.setLastName(updatedUser.getLastName());
             user.setEmail(updatedUser.getEmail());
             user.setBio(updatedUser.getBio());
-            user.setProfilepicture(updatedUser.getProfilepicture());
-            // If you want to update password, you can check and encode it
+            user.setProfilepic(updatedUser.getProfilepic());
             if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
                 user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             }
             return userRepository.save(user);
-        }
-        throw new UsernameNotFoundException("User not found with id: " + userId);
-    }
-
-    public User updateUser(User user) {
-        return userRepository.save(user);
+        }).orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
     }
 
     public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("User not found with id: " + id);
+        }
         userRepository.deleteById(id);
     }
 

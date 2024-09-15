@@ -23,8 +23,10 @@ public class OpenApiConfig {
                         new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
                                 .name("Authorization")))
                 .info(new Info().title("CONTENT-MICROSERVICE")
-                        .description("@author:github/JITESHWARI auth for SOCAIL MEDIA app").version("1.0.0"))
+                        .description("@author:github/jiteshwari auth for SOCAIL MEDIA app").version("1.0.0"))
                 .addSecurityItem(new SecurityRequirement().addList("bearer-token"));
     }
+
+
 
 }

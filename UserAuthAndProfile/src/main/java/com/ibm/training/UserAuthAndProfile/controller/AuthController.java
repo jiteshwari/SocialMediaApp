@@ -3,10 +3,14 @@ package com.ibm.training.UserAuthAndProfile.controller;
 import com.ibm.training.UserAuthAndProfile.dto.JwtRequestDTO;
 import com.ibm.training.UserAuthAndProfile.dto.JwtResponse;
 import com.ibm.training.UserAuthAndProfile.entity.User;
+import com.ibm.training.UserAuthAndProfile.exception.TokenInvalidException;
+import com.ibm.training.UserAuthAndProfile.service.CloudStorageService;
 import com.ibm.training.UserAuthAndProfile.service.TokenBlacklistService;
 import com.ibm.training.UserAuthAndProfile.service.UserService;
 import com.ibm.training.UserAuthAndProfile.util.JwtTokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,12 +18,17 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    @Autowired
+    private CloudStorageService cloudStorageService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -35,26 +44,44 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody JwtRequestDTO jwtRequest) {
+        logger.info("Login attempt for user with email: {}", jwtRequest.getEmail());
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(), jwtRequest.getPassword())
             );
+            logger.info("Authentication successful for user: {}", jwtRequest.getEmail());
         } catch (BadCredentialsException e) {
+            logger.error("Authentication failed for user: {}", jwtRequest.getEmail(), e);
             throw new BadCredentialsException("Invalid credentials");
         }
 
         final UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getEmail());
         final String jwt = jwtTokenUtil.generateToken(userDetails);
+        User loggedInUser = userService.findByEmail(jwtRequest.getEmail())
+                .orElseThrow(() -> {
+                    logger.error("User not found for email: {}", jwtRequest.getEmail());
+                    return new BadCredentialsException("User not found");
+                });
 
-        User loggedInUser = userService.findByEmail(jwtRequest.getEmail()).get();
-
+        logger.info("User {} logged in successfully", jwtRequest.getEmail());
         return ResponseEntity.ok(new JwtResponse(loggedInUser, jwt));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        User registeredUser = userService.register(user);
-        return ResponseEntity.ok(registeredUser);
+    public ResponseEntity<?> register(@RequestBody User user,@RequestParam("profilepic") MultipartFile imageFile) {
+        logger.info("Registering new user with email: {}", user.getEmail());
+        try {
+            String profilePicUrl= cloudStorageService.uploadImage(imageFile);
+            user.setProfilepic(profilePicUrl);
+            User registeredUser = userService.register(user);
+            logger.info("User registered successfully with email: {}", user.getEmail());
+            return ResponseEntity.ok(registeredUser);
+        } catch (IllegalArgumentException e) {
+            logger.error("Registration failed for user: {}", user.getEmail(), e);
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/logout")
@@ -64,9 +91,11 @@ public class AuthController {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             tokenBlacklistService.blacklistToken(token);
+            logger.info("Token blacklisted successfully: {}", token);
             return ResponseEntity.ok("Logged out successfully");
         }
 
+        logger.warn("Logout attempt without a valid token.");
         return ResponseEntity.badRequest().body("No token provided");
     }
 
@@ -76,7 +105,8 @@ public class AuthController {
             String token = authHeader.substring(7);
 
             if (tokenBlacklistService.isTokenBlacklisted(token)) {
-                return ResponseEntity.status(401).body("Token is blacklisted");
+                logger.warn("Token verification failed: Token is blacklisted");
+                throw new TokenInvalidException("Token is blacklisted");
             }
 
             try {
@@ -84,21 +114,32 @@ public class AuthController {
                 UserDetails userDetails = userService.loadUserByUsername(username);
 
                 if (jwtTokenUtil.validateToken(token, userDetails)) {
+                    logger.info("Token verification successful for token: {}", token);
                     return ResponseEntity.ok("Token is valid");
                 } else {
-                    return ResponseEntity.status(401).body("Token is invalid");
+                    logger.warn("Token is invalid: {}", token);
+                    throw new TokenInvalidException("Token is invalid");
                 }
             } catch (Exception e) {
-                return ResponseEntity.status(401).body("Token verification failed");
+                logger.error("Token verification failed for token: {}", token, e);
+                throw new TokenInvalidException("Token verification failed");
             }
         }
 
+        logger.warn("Token verification attempt without a valid Authorization header.");
         return ResponseEntity.status(400).body("No token provided");
     }
 
     @PutMapping("/edit-profile/{id}")
     public ResponseEntity<?> editProfile(@PathVariable Long id, @RequestBody User updatedUser) {
-        User editedUser = userService.editUserProfile(id, updatedUser);
-        return ResponseEntity.ok(editedUser);
+        logger.info("Editing profile for user with ID: {}", id);
+        try {
+            User editedUser = userService.editUserProfile(id, updatedUser);
+            logger.info("Profile updated successfully for user with ID: {}", id);
+            return ResponseEntity.ok(editedUser);
+        } catch (Exception e) {
+            logger.error("Profile update failed for user with ID: {}", id, e);
+            return ResponseEntity.status(500).body("Profile update failed");
+        }
     }
 }

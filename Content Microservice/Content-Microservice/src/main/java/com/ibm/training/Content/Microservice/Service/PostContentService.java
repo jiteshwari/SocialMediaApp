@@ -10,11 +10,11 @@ import java.util.List;
 @Service
 public interface PostContentService {
 
-    PostContent uploadImagePost(String contentType, MultipartFile imageFile, String caption) throws Exception;
+    PostContent uploadImagePost(String contentType, String url, String caption) throws Exception;
 
     PostContent uploadTextPost(String contentType, String contentText);
 
-    PostContent uploadImageTextPost(String contentType, String contentText, MultipartFile imageFile) throws Exception;
+    PostContent uploadImageTextPost(String contentType, String contentText, String url) throws Exception;
 
     PostContent getPostById(Long postId);
 

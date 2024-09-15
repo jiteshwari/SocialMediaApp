@@ -15,8 +15,8 @@ public class PostContent {
 
     private String contentType;
 
-  
-    private byte[] contentData;
+
+    private String posturl;
 
     private String caption;
 
@@ -24,10 +24,13 @@ public class PostContent {
     public PostContent() {}
 
     // Parameterized Constructor
-    public PostContent(Long userId, String contentType, byte[] contentData, String caption) {
+
+
+    public PostContent(Long postId, Long userId, String contentType, String posturl, String caption) {
+        this.postId = postId;
         this.userId = userId;
         this.contentType = contentType;
-        this.contentData = contentData;
+        this.posturl = posturl;
         this.caption = caption;
     }
 
@@ -56,12 +59,12 @@ public class PostContent {
         this.contentType = contentType;
     }
 
-    public byte[] getContentData() {
-        return contentData;
+    public String getPosturl() {
+        return posturl;
     }
 
-    public void setContentData(byte[] contentData) {
-        this.contentData = contentData;
+    public void setPosturl(String posturl) {
+        this.posturl = posturl;
     }
 
     public String getCaption() {
