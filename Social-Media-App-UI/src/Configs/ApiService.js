@@ -8,7 +8,7 @@ const API_URLS = {
     REGISTER: 'http://localhost:8084/api/auth/register',
     LOGIN: 'http://localhost:8084/api/auth/login',
     LOGOUT: 'http://localhost:8084/api/auth/logout',
-    FETCH_POSTS: 'http://localhost:8082/api/posts/all',
+    FETCH_POSTS: 'http://localhost:8083/api/home/posts',
     LIKE_POST: 'http://localhost:8083/api/home/like'
 };
 

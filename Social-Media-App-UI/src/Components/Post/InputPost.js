@@ -1,5 +1,5 @@
 import "../Post/InputPost.css"
-import Profile from "../../assets/profile.jpg"
+import Profile from "../../assets/DP/img3.jpg"
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
@@ -24,7 +24,7 @@ const InputPost = ({handleSubmit,
                 <input 
                 type="text" 
                 id="i-input" 
-                placeholder="What's in your mind Vijay?"
+                placeholder="What's in your mind Jiteshwari?"
                 required
                 value={body}
                 onChange={(e)=>setBody(e.target.value)}

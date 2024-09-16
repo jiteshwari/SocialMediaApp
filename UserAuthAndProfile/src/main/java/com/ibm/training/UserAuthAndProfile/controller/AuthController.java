@@ -24,6 +24,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);

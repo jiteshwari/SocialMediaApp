@@ -10,4 +10,5 @@ public class ContentMicroserviceApplication {
 		SpringApplication.run(ContentMicroserviceApplication.class, args);
 	}
 
+
 }

@@ -1,30 +1,33 @@
 import { useEffect, useState } from 'react';
-import Profile from "../../assets/profile.jpg";
-import img1 from "../../assets/Post Images/img1.jpg";
-import DPimg1 from "../../assets/DP/img1.jpg";
-import Cover1 from "../../assets/Friends-Cover/cover-1.jpg";
+import profileImg from "../../assets/DP/img3.jpg";
 import "../Home/Home.css";
 import Left from "../../Components/LeftSide/Left";
 import Middle from "../../Components/MiddleSide/Middle";
 import Right from '../../Components/RightSide/Right';
 import Nav from '../../Components/Navigation/Nav';
 import moment from 'moment/moment';
-import { getAllPosts } from '../../Configs/ApiService';
+import axios from 'axios'; // Import axios
 
 const Home = ({ setFriendsProfile }) => {
     const [posts, setPosts] = useState([]);
-    const [body, setBody] = useState("");
-    const [importFile, setImportFile] = useState("");
-    const [search, setSearch] = useState("");
-    const [following, setFollowing] = useState("");
     const [showMenu, setShowMenu] = useState(false);
-    const [images, setImages] = useState(null);
 
     // Function to fetch posts from the API
     const fetchPosts = async () => {
         try {
-            const response = await getAllPosts(); // Fetch posts using Axios instance
-            setPosts(response); // Set the response data to the posts state
+            // Retrieve the token from sessionStorage
+            const token = sessionStorage.getItem('jwtToken'); // Adjust the key as needed
+
+            // Make the API call with the token included in headers
+            const response = await axios.get('http://localhost:8083/api/home/posts', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            // Set the response data to the posts state
+            setPosts(response.data); 
         } catch (error) {
             console.error("Error fetching posts:", error);
         }
@@ -38,54 +41,34 @@ const Home = ({ setFriendsProfile }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
-        const username = "Vijay";
-        const profilepicture = Profile;
+        const username = "jiteshwari";
+        const profilepicture = profileImg;
         const datetime = moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow();
-        const img = images ? { img: URL.createObjectURL(images) } : null;
 
         const obj = {
             id: id,
             profilepicture: profilepicture,
             username: username,
             datetime: datetime,
-            img: img && img.img,
-            body: body,
             like: 0,
             comment: 0
         };
 
         const insert = [...posts, obj];
         setPosts(insert);
-        setBody("");
-        setImages(null);
     };
 
     return (
         <div className='interface'>
-            <Nav 
-                search={search}
-                setSearch={setSearch}
-                showMenu={showMenu}
-                setShowMenu={setShowMenu}
-            />
-
+            <Nav profileImg={profileImg} />
             <div className="home">
-                <Left />
-
+                <Left profileImg={profileImg} />
                 <Middle 
                     handleSubmit={handleSubmit}
-                    body={body}
-                    setBody={setBody}
-                    importFile={importFile}
-                    setImportFile={setImportFile}
                     posts={posts}
                     setPosts={setPosts}
-                    search={search}
-                    setFriendsProfile={setFriendsProfile}
-                    images={images}
-                    setImages={setImages}
+                    profileImg={profileImg}
                 />
-
                 <Right />
             </div>
         </div>

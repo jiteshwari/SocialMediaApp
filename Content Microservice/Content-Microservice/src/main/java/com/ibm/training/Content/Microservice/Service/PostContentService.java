@@ -1,7 +1,6 @@
 package com.ibm.training.Content.Microservice.Service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ibm.training.Content.Microservice.Entity.PostContent;
 
@@ -10,7 +9,7 @@ import java.util.List;
 @Service
 public interface PostContentService {
 
-    PostContent uploadImagePost(String contentType, String url, String caption) throws Exception;
+    PostContent uploadImagePost(String contentType, String url, String caption, Long userId) throws Exception;
 
     PostContent uploadTextPost(String contentType, String contentText);
 

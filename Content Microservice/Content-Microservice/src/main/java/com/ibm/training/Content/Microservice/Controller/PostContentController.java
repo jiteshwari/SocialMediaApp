@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PostContentController {
 
     private static final Logger logger = LoggerFactory.getLogger(PostContentController.class);
@@ -31,7 +32,9 @@ public class PostContentController {
     public ResponseEntity<String> uploadImagePost(
             @RequestParam("contentType") String contentType,
             @RequestParam("imageFile") MultipartFile imageFile,
-            @RequestParam("caption") String caption) {
+            @RequestParam("caption") String caption,
+            @RequestParam("userId") Long userId) {
+
 
         logger.info("Uploading image post with contentType: {}, caption: {}", contentType, caption);
 
@@ -42,7 +45,7 @@ public class PostContentController {
 
         try {
             String url = cloudStorageService.uploadImage(imageFile);
-            PostContent savedPost = postContentService.uploadImagePost(contentType, url, caption);
+            PostContent savedPost = postContentService.uploadImagePost(contentType, url, caption,userId);
             logger.info("File uploaded successfully with ID: {}", savedPost.getPostId());
             return new ResponseEntity<>("File uploaded successfully with ID: " + savedPost.getPostId(), HttpStatus.CREATED);
         } catch (FileStorageException e) {

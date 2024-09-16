@@ -13,6 +13,7 @@ import com.ibm.training.Content.Microservice.exceptions.FileStorageException;
 import com.ibm.training.Content.Microservice.exceptions.PostContentException;
 
 import java.io.IOException;
+import java.time.LocalDateTime; // Import LocalDateTime
 import java.util.List;
 
 @Service
@@ -24,14 +25,13 @@ public class PostContentServiceImpl implements PostContentService {
     private PostContentRepository postContentRepository;
 
     @Override
-    public PostContent uploadImagePost(String contentType, String url, String caption) {
-
+    public PostContent uploadImagePost(String contentType, String url, String caption, Long userId) {
         PostContent postContent = new PostContent();
         postContent.setContentType(contentType);
         postContent.setCaption(caption);
         postContent.setPosturl(url);
-        postContent.setUserId(1L);
-
+        postContent.setUserId(userId);
+        postContent.setCreatedDate(LocalDateTime.now()); // Set creation date and time
         return savePostContent(postContent);
     }
 
@@ -41,17 +41,18 @@ public class PostContentServiceImpl implements PostContentService {
         postContent.setContentType(contentType);
         postContent.setCaption(contentText);
         postContent.setUserId(1L);
+        postContent.setCreatedDate(LocalDateTime.now()); // Set creation date and time
         return savePostContent(postContent);
     }
 
     @Override
     public PostContent uploadImageTextPost(String contentType, String contentText, String url) {
-
         PostContent postContent = new PostContent();
         postContent.setContentType(contentType);
         postContent.setCaption(contentText);
         postContent.setPosturl(url);
         postContent.setUserId(1L);
+        postContent.setCreatedDate(LocalDateTime.now()); // Set creation date and time
         return savePostContent(postContent);
     }
 
@@ -87,5 +88,4 @@ public class PostContentServiceImpl implements PostContentService {
     public List<PostContent> getAllPosts() {
         return postContentRepository.findAll();
     }
-
 }
