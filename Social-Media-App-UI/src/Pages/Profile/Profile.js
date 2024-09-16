@@ -4,7 +4,7 @@ import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import "../Profile/Profile.css"
-import ProfileImg from "../../assets/profile.jpg"
+import ProfileImg from "../../assets/DP/img3.jpg"
 
 const Profile = () => {
 
@@ -21,10 +21,10 @@ const Profile = () => {
 
   const [modelDetails,setModelDetails] = useState(
     {
-      ModelName:"Vijay",
-      ModelUserName:"@Vijay98",
+      ModelName:"Jiteshwari",
+      ModelUserName:"@jittu",
       ModelCountryName:"India",
-      ModelJobName:"Web Developer in Google"
+      ModelJobName:"Full Stack Developer in IBM"
     }
   )
 
@@ -62,10 +62,6 @@ const Profile = () => {
         />
         
         <Right 
-        showMenu={showMenu}
-        setShowMenu={setShowMenu}
-        following={following}
-        setFollowing={setFollowing}
         />
       </div>
     </div>

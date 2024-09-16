@@ -1,76 +1,95 @@
-// 
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import Profile from "../../assets/profile.jpg";
+import img1 from "../../assets/Post Images/img1.jpg";
+import DPimg1 from "../../assets/DP/img1.jpg";
+import Cover1 from "../../assets/Friends-Cover/cover-1.jpg";
+import "../Home/Home.css";
+import Left from "../../Components/LeftSide/Left";
+import Middle from "../../Components/MiddleSide/Middle";
+import Right from '../../Components/RightSide/Right';
+import Nav from '../../Components/Navigation/Nav';
+import moment from 'moment/moment';
+import { getAllPosts } from '../../Configs/ApiService';
 
-const Home = () => {
-  const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(null);
+const Home = ({ setFriendsProfile }) => {
+    const [posts, setPosts] = useState([]);
+    const [body, setBody] = useState("");
+    const [importFile, setImportFile] = useState("");
+    const [search, setSearch] = useState("");
+    const [following, setFollowing] = useState("");
+    const [showMenu, setShowMenu] = useState(false);
+    const [images, setImages] = useState(null);
 
-  // Fetch Posts Function with Logging
-  const fetchPosts = async () => {
-    const API_URL = 'http://localhost:8082/api/posts/all';  // Your backend URL
+    // Function to fetch posts from the API
+    const fetchPosts = async () => {
+        try {
+            const response = await getAllPosts(); // Fetch posts using Axios instance
+            setPosts(response); // Set the response data to the posts state
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+        }
+    };
 
-    try {
-      console.log('Initiating API call to fetch posts...');  // Log start of API call
+    // Call fetchPosts when the component mounts
+    useEffect(() => {
+        fetchPosts();
+    }, []);
 
-      // Simulating the presence of a JWT token (if necessary)
-      const token = sessionStorage.getItem('jwtToken');
-      console.log('JWT token used:', token);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
+        const username = "Vijay";
+        const profilepicture = Profile;
+        const datetime = moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow();
+        const img = images ? { img: URL.createObjectURL(images) } : null;
 
-      // Make API call
-      const response = await axios.get(API_URL, {
-        headers: {
-          'Authorization': `Bearer ${token}`,  // Add Authorization header if required
-          'Content-Type': 'application/json,multipart/form-data',
-        },  // For cross-origin credentials
-      });
+        const obj = {
+            id: id,
+            profilepicture: profilepicture,
+            username: username,
+            datetime: datetime,
+            img: img && img.img,
+            body: body,
+            like: 0,
+            comment: 0
+        };
 
-      console.log('API call successful. Response data:', response.data);  // Log successful response
-      setPosts(response.data);
-      setError(null);
-    } catch (err) {
-      console.error('Error occurred during API call:', err);  // Log error
-      setError('Failed to fetch posts. Please try again later.');
-    }
-  };
+        const insert = [...posts, obj];
+        setPosts(insert);
+        setBody("");
+        setImages(null);
+    };
 
-  return (
-    <div style={{ padding: '20px' }}>
-      <h1>Home Page</h1>
+    return (
+        <div className='interface'>
+            <Nav 
+                search={search}
+                setSearch={setSearch}
+                showMenu={showMenu}
+                setShowMenu={setShowMenu}
+            />
 
-      {/* Button to Fetch Posts */}
-      <button
-        onClick={() => {
-          console.log('Fetch Posts button clicked.');  // Log button click
-          fetchPosts();
-        }}
-        style={{ padding: '10px 20px', fontSize: '16px' }}
-      >
-        Fetch Posts
-      </button>
+            <div className="home">
+                <Left />
 
-      {/* Error Display */}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+                <Middle 
+                    handleSubmit={handleSubmit}
+                    body={body}
+                    setBody={setBody}
+                    importFile={importFile}
+                    setImportFile={setImportFile}
+                    posts={posts}
+                    setPosts={setPosts}
+                    search={search}
+                    setFriendsProfile={setFriendsProfile}
+                    images={images}
+                    setImages={setImages}
+                />
 
-      {/* Posts Display */}
-      {posts.length > 0 ? (
-        <div>
-          <h2>Posts</h2>
-          <ul>
-            {posts.map(post => (
-              <li key={post.postId}>
-                <strong>{post.caption || post.contentText}</strong>
-                <p>Content Type: {post.contentType}</p>
-              </li>
-            ))}
-          </ul>
-          {console.log('Posts displayed:', posts)} {/* Log post data */}
+                <Right />
+            </div>
         </div>
-      ) : (
-        <p>No posts to display.</p>
-      )}
-    </div>
-  );
+    );
 };
 
 export default Home;

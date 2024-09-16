@@ -32,18 +32,10 @@ const Login = () => {
                 const response = await loginUser(data);
 
                 // Check if response status is 200 and response data is not null
-                if (response.status === 200 && response.data) {
+                if (response) {
                     // Store the token if it exists (optional)
-                    if (response.data.token) {
-                        sessionStorage.setItem('jwtToken', response.data.token);
+                   
                         navigate("/home");
-                    }
-
-            
-                  
-                } else {
-                    // Set error if the login was not successful
-                    setError({ general: 'Invalid email or password. Please try again.' });
                 }
             } catch (error) {
                 console.error('Login failed:', error);
@@ -52,11 +44,7 @@ const Login = () => {
         }
     };
 
-    useEffect(() => {
-        if (Object.keys(error).length === 0 && submit) {
-            navigate("/home");
-        }
-    }, [error]);
+   
 
     function validationLogin(data) {
         const error = {};

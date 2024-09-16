@@ -18,7 +18,7 @@ const Nav = ({search,setSearch,setShowMenu,profileImg}) => {
     <nav>
         <div className="n-logo">
             <Link to="/home" className='logo' style={{color:"black",textDecoration:"none"}}>
-              <h1>Face <span>Gram</span></h1>
+              <h1>Social <span>Media</span></h1>
             </Link>
         </div>
 
