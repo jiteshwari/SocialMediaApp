@@ -10,6 +10,7 @@ import com.ibm.training.Homepage.Microservice.service.HomeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +22,14 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class HomeController {
 
+
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
     private HomeService homeService;
+
+
+
 
     @GetMapping("/posts")
     public ResponseEntity<List<PostContent>> getAllPosts() {
@@ -35,6 +40,7 @@ public class HomeController {
                 throw new PostNotFoundException("No posts available.");
             }
             logger.info("Successfully retrieved all posts.");
+
             return new ResponseEntity<>(posts, HttpStatus.OK);
         } catch (PostNotFoundException e) {
             logger.error("Error fetching posts: {}", e.getMessage());

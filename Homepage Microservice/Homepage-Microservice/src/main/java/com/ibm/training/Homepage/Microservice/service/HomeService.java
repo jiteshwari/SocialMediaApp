@@ -1,7 +1,7 @@
 package com.ibm.training.Homepage.Microservice.service;
 
 
-import com.ibm.training.Homepage.Microservice.config.JwtAuthenticationFilter;
+
 import com.ibm.training.Homepage.Microservice.dto.PostContent;
 import com.ibm.training.Homepage.Microservice.entity.Like;
 import com.ibm.training.Homepage.Microservice.exceptions.ExternalServiceException;
@@ -30,25 +30,25 @@ public class HomeService {
     @Autowired
     private LikeRepo likeRepository;
 
-    // Utility method to create headers with JWT token
-    private HttpHeaders createHeadersWithToken() {
-        HttpHeaders headers = new HttpHeaders();
-        String token = JwtAuthenticationFilter.getCurrentToken();
-        if (token != null) {
-            headers.set("Authorization", "Bearer " + token);
-            logger.info("JWT token added to headers.");
-        } else {
-            logger.warn("No JWT token available for the request.");
-        }
-        return headers;
-    }
+//    // Utility method to create headers with JWT token
+//    private HttpHeaders createHeadersWithToken() {
+//        //HttpHeaders headers = new HttpHeaders();
+//        //String token = JwtAuthenticationFilter.getCurrentToken();
+//        if (token != null) {
+//            headers.set("Authorization", "Bearer " + token);
+//            logger.info("JWT token added to headers.");
+//        } else {
+//            logger.warn("No JWT token available for the request.");
+//        }
+//        return headers;
+//    }
 
     public PostContent getPostContent(Long postId) {
         String url = "http://content-microservice/api/posts/" + postId;
-        HttpHeaders headers = createHeadersWithToken();
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+       // HttpHeaders headers = createHeadersWithToken();
+        //HttpEntity<Void> entity = new HttpEntity<>(headers);
         try {
-            ResponseEntity<PostContent> response = restTemplate.exchange(url, HttpMethod.GET, entity, PostContent.class);
+            ResponseEntity<PostContent> response = restTemplate.exchange(url, HttpMethod.GET, null, PostContent.class);
             logger.info("Successfully fetched post content for postId {}.", postId);
             return response.getBody();
         } catch (RestClientException e) {
@@ -59,10 +59,10 @@ public class HomeService {
 
     public List<PostContent> getAllPosts() {
         String url = "http://localhost:8082/api/posts/all";
-        HttpHeaders headers = createHeadersWithToken();
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+      //  HttpHeaders headers = createHeadersWithToken();
+        //HttpEntity<Void> entity = new HttpEntity<>(headers);
         try {
-            ResponseEntity<PostContent[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, PostContent[].class);
+            ResponseEntity<PostContent[]> response = restTemplate.exchange(url, HttpMethod.GET, null, PostContent[].class);
             logger.info("Successfully fetched all posts.");
             return Arrays.asList(response.getBody());
         } catch (RestClientException e) {

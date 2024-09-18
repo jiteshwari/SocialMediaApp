@@ -4,7 +4,7 @@ import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import "../Profile/Profile.css"
-import ProfileImg from "../../assets/DP/img3.jpg"
+
 
 const Profile = () => {
 
@@ -17,12 +17,22 @@ const Profile = () => {
 
   const [name,setName]= useState("")
   const [userName,setUserName]= useState("")
-  const [profileImg,setProfileImg] =useState(ProfileImg)
+  const [profileImg,setProfileImg] =useState("https://storage.googleapis.com/myimages-jitu/image_1726605567725_Image.jpg")
+
+  const [user, setUser] = useState({
+    id: 5,
+    email: "m6@gmail.com",
+    password: "$2a$10$cpfdIGFQP269i.B51rZ2BedtRbli0s5Gmh5bxyb21ciRoJ2CS7ORa",
+    firstName: "a",
+    lastName: "b",
+    bio: "cc",
+    profilepic: "https://storage.googleapis.com/myimages-jitu/image_1726605567725_Image.jpg"
+});
 
   const [modelDetails,setModelDetails] = useState(
     {
-      ModelName:"Jiteshwari",
-      ModelUserName:"@jittu",
+      ModelName:user.firstName,
+      ModelUserName:user.firstName+user.lastName,
       ModelCountryName:"India",
       ModelJobName:"Full Stack Developer in IBM"
     }
@@ -39,11 +49,7 @@ const Profile = () => {
         />
       <div className="home">
         <Left 
-        following={following}
-        setFollowing={setFollowing}
         profileImg={profileImg}
-        modelDetails={modelDetails}
-        
         />
 
         <ProfileMiddle 

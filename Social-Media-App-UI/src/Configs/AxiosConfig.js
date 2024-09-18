@@ -7,13 +7,21 @@ const createAxiosInstance = () => {
         headers: { 'Content-Type': 'application/json' }
     });
 
+
+    
     // Request interceptor to attach JWT token to each request
-    axiosInstance.interceptors.request.use(
+    axiosInstance.interceptors.request.use( 
         (config) => {
             const token = sessionStorage.getItem('jwtToken');
+            console.log(token);
             if (token) {
                 config.headers['Authorization'] = `Bearer ${token}`;
+                console.log("bearer token added successfully");
+                config.headers['Accept']= 'application/json'
+                config.headers['Content-Type']= 'application/json'
+                config.headers['Access-Control-Allow-Origin']= '*'
             }
+            console.log(config.headers)
             return config;
         },
         (error) => {

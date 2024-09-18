@@ -2,6 +2,7 @@ package com.ibm.training.UserAuthAndProfile.controller;
 
 import com.ibm.training.UserAuthAndProfile.dto.JwtRequestDTO;
 import com.ibm.training.UserAuthAndProfile.dto.JwtResponse;
+import com.ibm.training.UserAuthAndProfile.dto.UserRegistrationForm;
 import com.ibm.training.UserAuthAndProfile.entity.User;
 import com.ibm.training.UserAuthAndProfile.exception.TokenInvalidException;
 import com.ibm.training.UserAuthAndProfile.service.CloudStorageService;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,10 +23,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -69,22 +72,31 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user,@RequestParam("profilepic") MultipartFile imageFile) {
-        logger.info("Registering new user with email: {}", user.getEmail());
+    public ResponseEntity<?> register(@ModelAttribute UserRegistrationForm form) {
+        logger.info("Registering new user with email: {}", form.getEmail());
+
         try {
-            String profilePicUrl= cloudStorageService.uploadImage(imageFile);
+            User user = new User();
+            user.setEmail(form.getEmail());
+            user.setPassword(form.getPassword());
+            user.setFirstName(form.getFirstName());
+            user.setLastName(form.getLastName());
+            user.setBio(form.getBio());
+            String profilePicUrl = cloudStorageService.uploadImage(form.getProfilepic());
             user.setProfilepic(profilePicUrl);
+
             User registeredUser = userService.register(user);
-            logger.info("User registered successfully with email: {}", user.getEmail());
+
+            logger.info("User registered successfully with email: {}", form.getEmail());
             return ResponseEntity.ok(registeredUser);
         } catch (IllegalArgumentException e) {
-            logger.error("Registration failed for user: {}", user.getEmail(), e);
+            logger.error("Registration failed for user: {}", form.getEmail(), e);
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.error("File upload failed for user: {}", form.getEmail(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
         }
     }
-
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
@@ -141,6 +153,16 @@ public class AuthController {
         } catch (Exception e) {
             logger.error("Profile update failed for user with ID: {}", id, e);
             return ResponseEntity.status(500).body("Profile update failed");
+        }
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        Optional<User> user = userService.findById(id);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }

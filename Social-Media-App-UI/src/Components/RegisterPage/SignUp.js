@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import "../RegisterPage/RegisterPage.css";
 import { AiOutlineUser } from "react-icons/ai";
 import { FiMail } from "react-icons/fi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from 'react-router-dom';
 import validation from './Validation';
-import { registerUser } from '../../Configs/ApiService';
- // Import the API service function
+import { registerUser } from '../../Configs/ApiService'; // Import the API service function
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -50,37 +49,22 @@ const SignUp = () => {
             if (data.profilepic) {
                 formData.append('profilepic', data.profilepic);
             }
-            console.log(formData);
 
             try {
-                const response =await registerUser(data);
+                const response = await registerUser(formData); // Pass FormData to the API
                 if (response.status === 200 && response.data) {
-                    // Store the token if it exists (optional)
-                    if (response.data !== null) {
-                        navigate("/login");
-                    }
-
-            
-                  
+                    navigate("/login");
                 } else {
-                    // Set error if the login was not successful
                     setError({ general: 'Error during registration' });
                 }
             } catch (error) {
                 console.error("Error during registration:", error);
-                // Handle error (e.g., show a message to the user)
+                setError({ general: 'Error during registration' }); // Handle error (e.g., show a message to the user)
             }
-        }
-        else{
+        } else {
             console.log("Failed validation");
         }
     };
-
-    useEffect(() => {
-        if (Object.keys(error).length === 0 && submit) {
-            navigate("/home");
-        }
-    }, [error]);
 
     return (
         <div className="container">
@@ -97,16 +81,7 @@ const SignUp = () => {
                                     name="fullname"
                                     id="fullname"
                                     onChange={handleChange}
-                                    placeholder='First Name'
-                                />
-                            </div>
-                            <div className="inputBox">
-                                <AiOutlineUser className='fullName' />
-                                <input type='text'
-                                    name="lastName"
-                                    id="lastName"
-                                    onChange={handleChange}
-                                    placeholder='LastName Name'
+                                    placeholder='Full Name'
                                 />
                             </div>
                             {error.fullname && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.fullname}</span>}
@@ -137,7 +112,7 @@ const SignUp = () => {
                                 <RiLockPasswordLine className='password' />
                                 <input type="password"
                                     name="confirmpassword"
-                                    id="confirmPassword"
+                                    id="confirmpassword"
                                     onChange={handleChange}
                                     placeholder='Confirm Password'
                                 />
