@@ -12,7 +12,8 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 
 const Left = ({profileImg,
-               modelDetails
+               modelDetails,
+               user
               }) => {
 
   const [btnActive,setBtnActive] =useState("#")
@@ -28,31 +29,7 @@ const Left = ({profileImg,
         </div>
       </Link>
     
-      <div id='L-box' onClick={()=>setBtnActive("#explore")} className={btnActive === "#explore" ? "active" : ""}>
-        <AiOutlineSearch
-          className='margin'/>
-         <span>Explore</span>
-      </div>
-          
-      <div id='L-box'  onClick={()=>setBtnActive("#trending")} className={btnActive === "#trending" ? "active" : ""}>
-       <h1 className='notifi'>
-          <FiTrendingUp 
-           className='margin'/>
-        </h1> 
-        <span>Trending</span>
-      </div>
-
-      <div id='L-box' onClick={()=>setBtnActive("#lists")} className={btnActive === "#lists" ? "active" : ""}>
-        <RiFileListLine
-        className='margin'/>
-        <span>Lists</span>
-      </div>
-
-      <div id='L-box' onClick={()=>setBtnActive("#saved")} className={btnActive === "#saved" ? "active" : ""}>
-        <BsBookmark
-         className='margin'/>
-        <span>Saved</span>
-      </div>
+    
 
       <div id='L-box' onClick={()=>setBtnActive("#settings")} className={btnActive === "#settings" ? "active" : ""}>
         <FiSettings 
@@ -65,8 +42,8 @@ const Left = ({profileImg,
           <div className="user-name-userid">
             <img src={profileImg ? (profileImg) :"https://www.defineinternational.com/wp-content/uploads/2014/06/dummy-profile.png"} alt="" />
               <div className='L-user'>
-                <h1>{modelDetails ? (modelDetails.ModelName) : "Jiteshwari"}</h1>
-                <span>{modelDetails ? (modelDetails.ModelUserName) : "@jiteshwari"}</span>
+                <h1>{user ? (user.firstName) : "Jiteshwari"}</h1>
+                <span>{user ? (user.email) : "@jiteshwari"}</span>
             </div>
           </div>
         </Link>
@@ -75,7 +52,7 @@ const Left = ({profileImg,
           {logOutExit && (
             <div className="logOutExitContainer">
               <button>Add an existing account</button>
-              <Link to="/" style={{width:"100%"}}><button>Log out @vijay98</button></Link>
+              <Link to="/" style={{width:"100%"}}><button>Log out</button></Link>
             </div>
           )}
       </div>

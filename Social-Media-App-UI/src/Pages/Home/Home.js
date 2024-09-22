@@ -122,7 +122,7 @@ const Home = ({ setFriendsProfile }) => {
 
             <div className="home">
 
-                <Left profileImg={user.profilepic}/>
+                <Left profileImg={user.profilepic} user={user}/>
 
                
                 <Middle

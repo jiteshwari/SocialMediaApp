@@ -8,6 +8,7 @@ import "../Profile/ProfileMiddle.css"
 import moment from 'moment'
 import ProfileInputPost from './ProfileComponents/ProfileInputPost'
 import { getPostsByUserId } from '../../Configs/ApiService'
+import ImageUploadComponent from '../Post/ImageUploadComponent'
 
 const ProfileMiddle = ({following,
                         search,
@@ -131,7 +132,7 @@ const ProfileMiddle = ({following,
         setUserName={setUserName}
         />
         
-        <ProfileInputPost
+        {/* <ProfileInputPost
         modelDetails={modelDetails}
         profileImg={profileImg}
         handleSubmit={handleSubmit}
@@ -141,7 +142,9 @@ const ProfileMiddle = ({following,
         setImportFile ={setImportFile}
         images={images}
         setImages={setImages}
-        />
+        /> */}
+    <ImageUploadComponent  profileImg={profileImg} modelDetails={modelDetails}/>
+
         
         <UserHome 
         modelDetails={modelDetails}

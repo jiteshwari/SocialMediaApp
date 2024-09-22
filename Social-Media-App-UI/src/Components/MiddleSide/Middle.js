@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import InputPost from '../Post/InputPost'
 import Homepage from "../Home/Homepage"
 import "../MiddleSide/Middle.css"
+import ImageUploadComponent from '../Post/ImageUploadComponent'
 
 
 const Middle = ({handleSubmit,
@@ -35,7 +36,7 @@ const Middle = ({handleSubmit,
   
   return (
     <div className='M-features'>
-        <InputPost
+        {/* <InputPost
         profileImg={profileImg}
         handleSubmit={handleSubmit}
         body ={body}
@@ -47,7 +48,9 @@ const Middle = ({handleSubmit,
         setEmptImg={setEmptImg}
         setImages={setImages}
 
-        />
+        /> */}
+    <ImageUploadComponent profileImg={profileImg}/>
+
 
         <Homepage 
         posts ={searchResults}

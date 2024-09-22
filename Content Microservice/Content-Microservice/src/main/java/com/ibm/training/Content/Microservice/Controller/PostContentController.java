@@ -3,6 +3,7 @@ package com.ibm.training.Content.Microservice.Controller;
 import com.ibm.training.Content.Microservice.Entity.PostContent;
 import com.ibm.training.Content.Microservice.Service.CloudStorageService;
 import com.ibm.training.Content.Microservice.Service.PostContentService;
+import com.ibm.training.Content.Microservice.dto.ImagePostForm;
 import com.ibm.training.Content.Microservice.exceptions.FileStorageException;
 import com.ibm.training.Content.Microservice.exceptions.PostContentException;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -29,36 +31,45 @@ public class PostContentController {
     private CloudStorageService cloudStorageService;
 
     @PostMapping("/uploadImagePost")
-    public ResponseEntity<String> uploadImagePost(
-            @RequestParam("contentType") String contentType,
-            @RequestParam("imageFile") MultipartFile imageFile,
-            @RequestParam("caption") String caption,
-            @RequestParam("userId") Long userId) {
+    public ResponseEntity<?> uploadImagePost(@ModelAttribute ImagePostForm form) {
+        logger.info("Uploading image post for userId: {}, contentType: {}, caption: {}", form.getUserId(), form.getContentType(), form.getCaption());
 
-
-        logger.info("Uploading image post with contentType: {}, caption: {}", contentType, caption);
-
-        if (imageFile.isEmpty()) {
-            logger.warn("Upload failed: No file selected.");
+        if (form.getImageFile().isEmpty()) {
+            logger.warn("Image upload failed: No file selected.");
             return ResponseEntity.badRequest().body("No file selected for upload.");
         }
 
         try {
-            String url = cloudStorageService.uploadImage(imageFile);
-            PostContent savedPost = postContentService.uploadImagePost(contentType, url, caption,userId);
-            logger.info("File uploaded successfully with ID: {}", savedPost.getPostId());
-            return new ResponseEntity<>("File uploaded successfully with ID: " + savedPost.getPostId(), HttpStatus.CREATED);
-        } catch (FileStorageException e) {
-            logger.error("File storage failed for image upload", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to store file. Please try again!");
-        } catch (PostContentException e) {
-            logger.error("Error saving post content", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving post content. Please check your input.");
+            // Upload image to cloud storage
+            String imageUrl = cloudStorageService.uploadImage(form.getImageFile());
+            logger.info("Image uploaded successfully to cloud storage. URL: {}", imageUrl);
+
+            // Create post content
+            PostContent postContent = new PostContent();
+            postContent.setContentType(form.getContentType());
+            postContent.setPosturl(imageUrl);
+            postContent.setCaption(form.getCaption());
+            postContent.setUserId(form.getUserId());
+
+            // Save post content in the service layer
+            PostContent savedPost = postContentService.uploadImagePost(postContent);
+            logger.info("Post saved successfully with ID: {}", savedPost.getPostId());
+
+            // Return successful response
+            return ResponseEntity.status(HttpStatus.CREATED).body("Image post uploaded successfully with ID: " + savedPost.getPostId());
+
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid input during image post upload for userId: {}", form.getUserId(), e);
+            return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
+        } catch (IOException e) {
+            logger.error("Image upload failed due to storage error for userId: {}", form.getUserId(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Image upload failed due to a storage issue.");
         } catch (Exception e) {
-            logger.error("Unexpected error during image upload", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+            logger.error("Unexpected error during image post upload for userId: {}", form.getUserId(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred during image post upload.");
         }
     }
+
 
     @PostMapping("/uploadTextPost")
     public ResponseEntity<String> uploadTextPost(

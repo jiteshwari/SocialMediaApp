@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface PostContentService {
 
-    PostContent uploadImagePost(String contentType, String url, String caption, Long userId) throws Exception;
+    PostContent uploadImagePost(PostContent postContent) throws Exception;
 
     PostContent uploadTextPost(String contentType, String contentText,Long userId);
 

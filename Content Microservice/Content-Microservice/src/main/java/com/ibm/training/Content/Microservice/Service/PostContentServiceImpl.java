@@ -25,12 +25,7 @@ public class PostContentServiceImpl implements PostContentService {
     private PostContentRepository postContentRepository;
 
     @Override
-    public PostContent uploadImagePost(String contentType, String url, String caption, Long userId) {
-        PostContent postContent = new PostContent();
-        postContent.setContentType(contentType);
-        postContent.setCaption(caption);
-        postContent.setPosturl(url);
-        postContent.setUserId(userId);
+    public PostContent uploadImagePost(PostContent postContent) {
         postContent.setCreatedDate(LocalDateTime.now()); // Set creation date and time
         return savePostContent(postContent);
     }

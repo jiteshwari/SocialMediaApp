@@ -5,6 +5,8 @@ import Profile from './Pages/Profile/Profile'
 import { Route, Routes } from 'react-router-dom'
 import Login from './Components/RegisterPage/Login'
 import SignUp from './Components/RegisterPage/SignUp'
+import ImageUploadComponent from './Components/Post/ImageUploadComponent'
+
 
 const App = () => {
   const [friendProfile,setFriendsProfile] =useState([])

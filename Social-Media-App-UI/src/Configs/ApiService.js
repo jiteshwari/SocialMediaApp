@@ -5,12 +5,12 @@
 
     // Define URLs for the API endpoints
     const API_URLS = {
-        REGISTER: 'https://userauth-94526523070.asia-south1.run.app/api/auth/register',
-        LOGIN: 'https://userauth-94526523070.asia-south1.run.app/api/auth/login',
-        LOGOUT: 'https://userauth-94526523070.asia-south1.run.app/api/auth/logout',
+        REGISTER: 'https://userauthandprofile-94526523070.asia-south1.run.app/api/auth/register',
+        LOGIN: 'https://userauthandprofile-94526523070.asia-south1.run.app/api/auth/login',
+        LOGOUT: 'https://userauthandprofile-94526523070.asia-south1.run.app/auth/logout',
         FETCH_POSTS: 'https://homemicroservice-94526523070.asia-south1.run.app/api/home/posts',
         LIKE_POST: 'https://homemicroservice-94526523070.asia-south1.run.app/api/home/like',
-        FETCH_USER_BY_ID: 'https://userauth-94526523070.asia-south1.run.app/api/auth/user',
+        FETCH_USER_BY_ID: 'https://userauthandprofile-94526523070.asia-south1.run.app/api/auth/user',
         FETCH_POSTS_BY_ID: 'https://contentmicroservice-94526523070.asia-south1.run.app/api/posts/user'  ,
         UPLOAD_IMAGE_POST: 'https://contentmicroservice-94526523070.asia-south1.run.app/api/posts/uploadImagePost',
         UPLOAD_TEXT_POST: 'https://contentmicroservice-94526523070.asia-south1.run.app/api/posts/uploadTextPost'
@@ -111,6 +111,7 @@
 
     export const uploadImagePost = async (formData) => {
         try {
+            console.log(formData);  // Log the form data for debugging purposes
             const response = await axiosInstance.post(API_URLS.UPLOAD_IMAGE_POST, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
