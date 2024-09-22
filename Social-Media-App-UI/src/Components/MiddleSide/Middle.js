@@ -5,6 +5,7 @@ import "../MiddleSide/Middle.css"
 
 
 const Middle = ({handleSubmit,
+                 profileImg,
                 body,
                 setBody,
                 setImportFile,
@@ -35,6 +36,7 @@ const Middle = ({handleSubmit,
   return (
     <div className='M-features'>
         <InputPost
+        profileImg={profileImg}
         handleSubmit={handleSubmit}
         body ={body}
         setBody ={setBody}
@@ -44,6 +46,7 @@ const Middle = ({handleSubmit,
         emptImg ={emptImg}
         setEmptImg={setEmptImg}
         setImages={setImages}
+
         />
 
         <Homepage 

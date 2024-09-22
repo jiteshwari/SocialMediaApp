@@ -3,8 +3,7 @@ import "../InfoProfile/Info.css"
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import WorkOutlineRoundedIcon from '@mui/icons-material/WorkOutlineRounded';
-import Info3 from "../../../../assets/Info-Dp/img-3.jpg"
-
+ 
 import {LiaEdit} from "react-icons/lia"
 
 import {IoCameraOutline} from "react-icons/io5"
@@ -25,7 +24,7 @@ const Info = ({userPostData,
               setUserName}) => {
 
 
-  const [coverImg,setCoverImg] =useState(Info3)
+  const [coverImg,setCoverImg] =useState("https://i.pinimg.com/originals/39/86/fe/3986fed5bc314b3ea37701b328c2485d.jpg")
 
   const importProfile=useRef()
   const importCover =useRef()
@@ -146,16 +145,8 @@ const Info = ({userPostData,
 
             <div className="info-col-2">
               <div>
-                <h2>5,000</h2>
-                <span>Followers</span>
-              </div>
-              <div>
                 <h2>{userPostData.length}</h2>
                 <span>Posts</span>
-              </div>
-              <div>
-                <h2>{following}</h2>
-                <span>Following</span>
               </div>
             </div>
 

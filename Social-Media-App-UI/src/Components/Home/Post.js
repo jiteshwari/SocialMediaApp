@@ -20,13 +20,9 @@ import {BiLogoLinkedin} from "react-icons/bi"
 import {AiFillYoutube} from "react-icons/ai"
 import {RxTwitterLogo} from "react-icons/rx"
 import {FiGithub} from "react-icons/fi"
+ 
 
-import img1 from "../../assets/Following/img-2.jpg"
-import img2 from  "../../assets/Following/img-3.jpg"
-import img3 from  "../../assets/Following/img-4.jpg"
-
-import Profile from "../../assets/profile.jpg"
-
+ 
 import { useState } from 'react';
 import Comments from '../Comments/Comments';
 import moment from 'moment';
@@ -36,31 +32,8 @@ import { Link } from 'react-router-dom';
 
 const Post = ({post,posts,setPosts,setFriendsProfile,images}) => {
 
-  const [comments,setComments] =useState([
-    {
-        id:1,
-        profilePic:img1,
-        likes:23,
-        username:"Violet",
-        time:"3 Hours Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse asperiores debitis saepe itaque, eligendi quasi laboriosam vitae voluptatem animi maiores voluptatibus."
-    },
-    {
-        id:2,
-        profilePic:img2,
-        likes:5,
-        username:"Brandon",
-        time:"1 Hour Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit."
-    },
-    {
-        id:3,
-        profilePic:img3,
-        likes:50,
-        username:"Lilly",
-        time:"30 Mins Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse asperiores debitis saepe itaque, eligendi quasi"
-    }
+  const [comments,setComments] =useState([    
+   
 ])
 
 
@@ -95,14 +68,14 @@ const handleDelete=(id)=>{
      e.preventDefault()
 
     const id=comments.length ? comments[comments.length -1].id +1 : 1
-    const profilePic =Profile
+    
     const username="Vijay"
     const comment =commentInput
     const time= moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow()
 
     const commentObj ={
       id:id,
-      profilePic:profilePic,
+      
       likes:0,
       username:username,
       comment:comment,

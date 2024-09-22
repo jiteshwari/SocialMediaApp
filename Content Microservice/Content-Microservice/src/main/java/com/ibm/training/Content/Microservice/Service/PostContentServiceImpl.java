@@ -36,11 +36,11 @@ public class PostContentServiceImpl implements PostContentService {
     }
 
     @Override
-    public PostContent uploadTextPost(String contentType, String contentText) {
+    public PostContent uploadTextPost(String contentType, String contentText,Long userId) {
         PostContent postContent = new PostContent();
         postContent.setContentType(contentType);
         postContent.setCaption(contentText);
-        postContent.setUserId(1L);
+        postContent.setUserId(userId);
         postContent.setCreatedDate(LocalDateTime.now()); // Set creation date and time
         return savePostContent(postContent);
     }

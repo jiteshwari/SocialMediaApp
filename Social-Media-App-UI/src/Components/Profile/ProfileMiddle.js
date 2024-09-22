@@ -1,15 +1,13 @@
 import Info from './ProfileComponents/InfoProfile/Info'
 import UserHome from '../UserHome/UserHome'
 
-import Profile from "../../assets/profile.jpg"
-import img1 from "../../assets/User-post/img1.jpg"
-import img2 from "../../assets/User-post/img2.jpg"
-import img3 from "../../assets/User-post/img3.jpg"
+ 
 import { useEffect, useState } from 'react'
 import "../Profile/ProfileMiddle.css"
 
 import moment from 'moment'
 import ProfileInputPost from './ProfileComponents/ProfileInputPost'
+import { getPostsByUserId } from '../../Configs/ApiService'
 
 const ProfileMiddle = ({following,
                         search,
@@ -25,42 +23,11 @@ const ProfileMiddle = ({following,
                         setModelDetails}) => {
 
   const [userPostData ,setUserPostData] =useState(
-    [
-      {
-        id:1,
-        username:"Vijay",
-        profilepicture:Profile,
-        img:img1,
-        datetime:moment("20230401", "YYYYMMDD").fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 22,
-        comment:12
-    },
-    {
-        id:2,
-        username:"Vijay",
-        profilepicture:Profile,
-        img:img2,
-        datetime:moment("20230525", "YYYYMMDD").fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 84,
-        comment:30
-    },
-    {
-        id:3,
-        username:"Vijay",
-        profilepicture:Profile,
-        img:img3,
-        datetime:moment.utc("2023-08-13 12:45:00").local().startOf('seconds').fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 340,
-        comment:76
-    }
-    ]
+    []
   )
   const [body,setBody] =useState("")
   const [importFile,setImportFile] =useState("")
-  
+  const [loading, setLoading] = useState(true); 
  
 
   const handleSubmit =(e)=>{
@@ -68,8 +35,8 @@ const ProfileMiddle = ({following,
 
   
     const id =userPostData.length ? userPostData[userPostData.length -1].id +1 :1
-    const username="Vijay"
-    const profilepicture=Profile
+    const username="Jiteshwari"
+    const profilepicture=profileImg
     const datetime=moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow()
     const img= images ? {img:URL.createObjectURL(images)} : null
 
@@ -105,13 +72,53 @@ const ProfileMiddle = ({following,
        
     },[userPostData,search])
 
+
+
+    useEffect(() => {
+      const fetchUserPost = async () => {
+        const userId = sessionStorage.getItem('userId');
+        if (userId) {
+          try {
+            const posts = await getPostsByUserId(userId);
+        
+          const example=posts.map(post => ({
+            id: post.postId, // Adjust according to your post structure
+            username: "jitu",
+            profilepicture: profileImg, // Use your profile image or get from post if available
+            img: post.posturl || null, // Assuming posts have an img property
+            datetime: moment(post.createdDate).fromNow(), // Adjust based on your datetime structure
+            body: post.caption,
+            like: 10 || 0, // Default to 0 if not available
+            comment: 1 || 0 // Default to 0 if not available
+          }));
+            //setUserPostData(posts);
+            if (Array.isArray(posts)) {
+              // Append fetched posts to the existing initial posts
+              const updatedPosts = [...userPostData, ...example];
+              setUserPostData(updatedPosts);
+            }
+            console.log(posts);
+          } catch (error) {
+            console.error('Error fetching user data:', error);
+          } finally {
+            setLoading(false); 
+          }
+        } else {
+          setLoading(false); 
+        }
+      };
+      fetchUserPost();
+    }, []);
+
    
 
     
 
   return (
     <div className='profileMiddle'>
-        <Info 
+     {loading ? ( // Loading indicator
+        <div className='loading'>Loading...</div>
+      ) : (<>  <Info 
         modelDetails ={modelDetails}
         setModelDetails={setModelDetails}
         profileImg={profileImg}
@@ -142,7 +149,8 @@ const ProfileMiddle = ({following,
         setUserPostData={setUserPostData}
         userPostData={searchResults}
         images={images}
-        />
+        /></>)
+      }
     </div>
   )
 }

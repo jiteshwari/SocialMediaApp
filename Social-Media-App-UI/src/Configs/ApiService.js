@@ -5,12 +5,16 @@
 
     // Define URLs for the API endpoints
     const API_URLS = {
-        REGISTER: 'http://localhost:8084/api/auth/register',
-        LOGIN: 'http://localhost:8084/api/auth/login',
-        LOGOUT: 'http://localhost:8084/api/auth/logout',
-        FETCH_POSTS: 'http://localhost:8083/api/home/posts',
-        LIKE_POST: 'http://localhost:8083/api/home/like',
-        FETCH_USER_BY_ID: 'http://localhost:8084/api/auth/user'  
+        REGISTER: 'https://userauth-94526523070.asia-south1.run.app/api/auth/register',
+        LOGIN: 'https://userauth-94526523070.asia-south1.run.app/api/auth/login',
+        LOGOUT: 'https://userauth-94526523070.asia-south1.run.app/api/auth/logout',
+        FETCH_POSTS: 'https://homemicroservice-94526523070.asia-south1.run.app/api/home/posts',
+        LIKE_POST: 'https://homemicroservice-94526523070.asia-south1.run.app/api/home/like',
+        FETCH_USER_BY_ID: 'https://userauth-94526523070.asia-south1.run.app/api/auth/user',
+        FETCH_POSTS_BY_ID: 'https://contentmicroservice-94526523070.asia-south1.run.app/api/posts/user'  ,
+        UPLOAD_IMAGE_POST: 'https://contentmicroservice-94526523070.asia-south1.run.app/api/posts/uploadImagePost',
+        UPLOAD_TEXT_POST: 'https://contentmicroservice-94526523070.asia-south1.run.app/api/posts/uploadTextPost'
+
     };
 
     // Example API calls
@@ -91,5 +95,40 @@
         } catch (error) {
             console.error('Error fetching user:', error);
             throw error;
+        }
+    };
+
+    export const getPostsByUserId = async (userId) => {
+        try {
+            const response = await axiosInstance.get(`${API_URLS.FETCH_POSTS_BY_ID}/${userId}`);
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            throw error;
+        }
+    };
+
+    export const uploadImagePost = async (formData) => {
+        try {
+            const response = await axiosInstance.post(API_URLS.UPLOAD_IMAGE_POST, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    export const uploadTextPost = async (data) => {
+        try {
+            const response = await axiosInstance.post(API_URLS.UPLOAD_TEXT_POST, data);
+            return response.data; // Return the response data
+        } catch (error) {
+            console.error('Error uploading text post:', error);
+            throw error; // Rethrow the error for handling in the component
         }
     };

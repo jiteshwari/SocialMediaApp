@@ -8,8 +8,7 @@ import {LiaUserFriendsSolid} from "react-icons/lia"
 import {IoNotificationsOutline} from "react-icons/io5"
 import {TbMessage} from "react-icons/tb"
 
-import Profile from "../../assets/profile.jpg"
-
+ 
 const Nav = ({search,setSearch,setShowMenu,profileImg}) => {
 
 
@@ -51,7 +50,7 @@ const Nav = ({search,setSearch,setShowMenu,profileImg}) => {
 
        <div className="n-profile" >
           <Link to="/profile"> 
-            <img src={profileImg ? (profileImg) : Profile} className='n-img' style={{marginBottom:"-7px"}}/>
+            <img src={profileImg ? (profileImg) : "https://www.defineinternational.com/wp-content/uploads/2014/06/dummy-profile.png"} className='n-img' style={{marginBottom:"-7px"}}/>
           </Link>
       </div>
   

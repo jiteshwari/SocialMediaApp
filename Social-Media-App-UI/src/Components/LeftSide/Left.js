@@ -9,7 +9,6 @@ import {RiFileListLine} from "react-icons/ri"
 import {FiSettings} from "react-icons/fi"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
-import Profile from "../../assets/profile.jpg"
 
 
 const Left = ({profileImg,
@@ -64,7 +63,7 @@ const Left = ({profileImg,
       <div className="left-user">
         <Link to="/profile" style={{textDecoration:"none",color:"black"}}>
           <div className="user-name-userid">
-            <img src={profileImg ? (profileImg) : Profile} alt="" />
+            <img src={profileImg ? (profileImg) :"https://www.defineinternational.com/wp-content/uploads/2014/06/dummy-profile.png"} alt="" />
               <div className='L-user'>
                 <h1>{modelDetails ? (modelDetails.ModelName) : "Jiteshwari"}</h1>
                 <span>{modelDetails ? (modelDetails.ModelUserName) : "@jiteshwari"}</span>

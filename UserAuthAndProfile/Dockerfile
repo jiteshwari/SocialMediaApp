@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/UserAuthAndProfile-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port your application will run on (adjust if needed)
-EXPOSE 8080
+EXPOSE 8084
 
 # Define the command to run your application
 ENTRYPOINT ["java", "-jar", "app.jar"]

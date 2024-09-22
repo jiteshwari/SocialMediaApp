@@ -14,7 +14,8 @@ const SignUp = () => {
     const [showAdditionalFields, setShowAdditionalFields] = useState(false);
 
     const [data, setData] = useState({
-        fullname: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
         confirmpassword: "",
@@ -41,10 +42,11 @@ const SignUp = () => {
 
         if (Object.keys(validationErrors).length === 0) {
             const formData = new FormData();
-            formData.append('fullname', data.fullname);
+            formData.append('firstName', data.firstName);
+            formData.append('lastName', data.lastName);
             formData.append('email', data.email);
             formData.append('password', data.password);
-            formData.append('confirmpassword', data.confirmpassword);
+            //formData.append('confirmpassword', data.confirmpassword);
             formData.append('bio', data.bio);
             if (data.profilepic) {
                 formData.append('profilepic', data.profilepic);
@@ -78,13 +80,24 @@ const SignUp = () => {
                             <div className="inputBox">
                                 <AiOutlineUser className='fullName' />
                                 <input type='text'
-                                    name="fullname"
-                                    id="fullname"
+                                    name="firstName"
+                                    id="firstName"
                                     onChange={handleChange}
-                                    placeholder='Full Name'
+                                    placeholder='First Name'
                                 />
                             </div>
-                            {error.fullname && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.fullname}</span>}
+                            {error.firstName && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.firstName}</span>}
+
+                            <div className="inputBox">
+                                <AiOutlineUser className='fullName' />
+                                <input type='text'
+                                    name="lastName"
+                                    id="lastName"
+                                    onChange={handleChange}
+                                    placeholder='Last Name'
+                                />
+                            </div>
+                            {error.lastName && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.lastName}</span>}
 
                             <div className="inputBox">
                                 <FiMail className='mail' />

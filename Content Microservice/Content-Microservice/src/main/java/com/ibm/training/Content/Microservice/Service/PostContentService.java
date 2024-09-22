@@ -11,7 +11,7 @@ public interface PostContentService {
 
     PostContent uploadImagePost(String contentType, String url, String caption, Long userId) throws Exception;
 
-    PostContent uploadTextPost(String contentType, String contentText);
+    PostContent uploadTextPost(String contentType, String contentText,Long userId);
 
     PostContent uploadImageTextPost(String contentType, String contentText, String url) throws Exception;
 

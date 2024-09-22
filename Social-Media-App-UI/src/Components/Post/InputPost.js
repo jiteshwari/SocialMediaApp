@@ -1,5 +1,5 @@
 import "../Post/InputPost.css"
-import Profile from "../../assets/DP/img3.jpg"
+
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
@@ -12,14 +12,15 @@ const InputPost = ({handleSubmit,
                    setBody,
                    body,
                    images,
-                   setImages
+                   setImages,
+                   profileImg
                   }) => {
 
   return (
      <div className="i-form">
         <form onSubmit={handleSubmit}>
             <div className="i-input-box">
-                <img src={Profile} className='i-img'/>
+                <img src={profileImg} className='i-img'/>
                 
                 <input 
                 type="text" 

@@ -1,7 +1,7 @@
 package com.ibm.training.Homepage.Microservice.controller;
 
 import com.ibm.training.Homepage.Microservice.entity.Like;
-import com.ibm.training.Homepage.Microservice.dto.PostContent;
+import com.ibm.training.Homepage.Microservice.entity.PostContent;
 import com.ibm.training.Homepage.Microservice.exceptions.LikeOperationException;
 import com.ibm.training.Homepage.Microservice.exceptions.PostNotFoundException;
 import com.ibm.training.Homepage.Microservice.service.HomeService;

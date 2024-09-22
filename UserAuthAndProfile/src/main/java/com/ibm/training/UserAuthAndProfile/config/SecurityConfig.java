@@ -49,18 +49,7 @@ public class SecurityConfig {
         return new JwtRequestFilter(userService, jwtTokenUtil);
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // Allow all origins
-        configuration.setAllowedMethods(List.of("*")); // Allow all methods (GET, POST, PUT, DELETE, etc.)
-        configuration.setAllowedHeaders(List.of("*")); // Allow all headers
-        configuration.setAllowCredentials(true); // Allow credentials
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -77,4 +66,7 @@ public class SecurityConfig {
 
         return httpSecurity.build();
     }
+
+   
+
 }

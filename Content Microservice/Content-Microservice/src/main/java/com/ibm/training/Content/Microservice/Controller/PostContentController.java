@@ -63,12 +63,14 @@ public class PostContentController {
     @PostMapping("/uploadTextPost")
     public ResponseEntity<String> uploadTextPost(
             @RequestParam("contentType") String contentType,
-            @RequestParam("contentText") String contentText) {
+            @RequestParam("contentText") String contentText,
+             @RequestParam("userId") Long userId
+    ) {
 
         logger.info("Uploading text post with contentType: {}, contentText: {}", contentType, contentText);
 
         try {
-            PostContent savedPost = postContentService.uploadTextPost(contentType, contentText);
+            PostContent savedPost = postContentService.uploadTextPost(contentType, contentText,userId);
             logger.info("Text post created successfully with ID: {}", savedPost.getPostId());
             return new ResponseEntity<>("Text post created successfully with ID: " + savedPost.getPostId(), HttpStatus.CREATED);
         } catch (PostContentException e) {
@@ -80,35 +82,6 @@ public class PostContentController {
         }
     }
 
-    @PostMapping("/uploadImageTextPost")
-    public ResponseEntity<String> uploadImageTextPost(
-            @RequestParam("contentType") String contentType,
-            @RequestParam("contentText") String contentText,
-            @RequestParam("imageFile") MultipartFile imageFile) {
-
-        logger.info("Uploading image and text post with contentType: {}, contentText: {}", contentType, contentText);
-
-        if (imageFile.isEmpty()) {
-            logger.warn("Upload failed: No file selected.");
-            return ResponseEntity.badRequest().body("No file selected for upload.");
-        }
-
-        try {
-            String url = cloudStorageService.uploadImage(imageFile);
-            PostContent savedPost = postContentService.uploadImageTextPost(contentType, contentText, url);
-            logger.info("Image and text post created successfully with ID: {}", savedPost.getPostId());
-            return new ResponseEntity<>("Post created successfully with ID: " + savedPost.getPostId(), HttpStatus.CREATED);
-        } catch (FileStorageException e) {
-            logger.error("File storage failed for image upload", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to store file. Please try again!");
-        } catch (PostContentException e) {
-            logger.error("Error saving image and text post content", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving post content. Please check your input.");
-        } catch (Exception e) {
-            logger.error("Unexpected error during image and text post creation", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
-        }
-    }
 
     // Get a single post by ID
     @GetMapping("/{postId}")

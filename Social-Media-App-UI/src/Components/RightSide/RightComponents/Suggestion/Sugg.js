@@ -1,6 +1,4 @@
 import React from 'react'
-import Simg1 from "../../../../assets/Suggestion/img-1.jpg"
-import Simg2 from "../../../../assets/Suggestion/img-2.jpg"
 import "../Suggestion/Sugg.css"
 
 const Sugg = () => {
@@ -10,7 +8,7 @@ const Sugg = () => {
 
       <div className="sugg-people">
         <div className="s-left">
-          <img src={Simg1} alt="" />
+          <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRXqO4pBeLoXaegT8aDlnPzNBT0j-EmFaYi9_iL_ZFCago1SNWD" alt="" />
           <h3>Cristiano Ronaldo</h3>
         </div>
 
@@ -22,7 +20,7 @@ const Sugg = () => {
 
       <div className="sugg-people">
         <div className="s-left">
-          <img src={Simg2} alt="" />
+          <img src="https://itforum.com.br/wp-content/uploads/2023/09/Elon-Musk.jpg?x87066" alt="" />
           <h3>Elon Musk</h3>
         </div>
 
